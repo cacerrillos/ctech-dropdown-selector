@@ -67,19 +67,6 @@ Polymer({
 	},
 	_onSelectedChange: function(e) {
 		this.redraww();
-		return;
-		if(this.objects){
-			this.selectedInternal = e + 1;
-			this.redraww();
-			if(this.selected >= 0 && this.selected < this.objects.length){
-				this.value = this.objects[this.selected].id;
-				this.fire("selected-changed", { selected: this.objects[this.selected].id });
-			} else {
-				this.value = -1;
-				this.fire("selected-changed", { });
-			}
-			
-		}
 	},
 	select: function() {
 
