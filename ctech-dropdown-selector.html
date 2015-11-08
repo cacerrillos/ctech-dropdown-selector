@@ -102,6 +102,7 @@ Polymer({
 	},
 	_onSelectedChange: function(e) {
 		this._renderButton();
+		this.fire('ctech-select', { item: e });
 	},
 	_renderButton: function(){
 		if(this.selected){
