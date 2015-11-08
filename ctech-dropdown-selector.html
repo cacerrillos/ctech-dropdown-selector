@@ -6,18 +6,15 @@
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <style is="custom-style">
-	.but {
-		background-color: #4285f4;
-		color: rgba(255,255,255,1.00);
-	}
+
 </style>
 <template>
 	<paper-menu-button>
 		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
-		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="onSelectedInternalChange">
+		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="_onSelectedInternalChange">
 			<paper-item id="defaultItem">[[defaultText]]</paper-item>
 			<template is="dom-repeat" items="[[items]]" as="row">
-				<paper-item data-id="[[_itemGetAttribute(row, attrForSelected)]]">[[_itemGetAttribute(row, attrForText)]]</paper-item>
+				<paper-item data-id="[[_getItemAttribute(row, attrForSelected)]]">[[_getItemAttribute(row, attrForText)]]</paper-item>
 			</template>
 		</paper-menu>
 	</paper-menu-button>
@@ -26,12 +23,7 @@
 Polymer({
 	is: "ctech-dropdown-selector",
 	properties: {
-		value: {
-			type: String,
-			value: "-1"
-		},
 		raised: Boolean,
-		name: String,
 		attrForSelected: {
 			type: String,
 			value: 'id'
@@ -42,7 +34,7 @@ Polymer({
 		},
 		items: {
 			type: Object,
-			observer: "onobjchange"
+			observer: "_onItemsChanged"
 		},
 		selected: {
 			type: Object,
@@ -57,39 +49,53 @@ Polymer({
 		selectedText: {
 			type: String
 		},
-		selectedInternal: Number
+		selectedColor: {
+			type: String,
+			value: "#2196F3"
+		},
+		defaultColor: {
+			type: String,
+			value: "#212121"
+		}
 	},
-	onobjchange: function(e){
-		this.redraww();
+	_onItemsChanged: function(e) {
+		this.select();
+		this._renderButton();
 	},
-	_itemGetAttribute: function(item, attribute) {
+	_getItemAttribute: function(item, attribute) {
 		return item[attribute];
 	},
+	_onSelectedInternalChange: function(e){
+		this.selected = this.$.dropdownSelector.selected > 0 ? this.items[this.$.dropdownSelector.selected - 1] : null;
+	},
 	_onSelectedChange: function(e) {
-		this.redraww();
+		this._renderButton();
 	},
-	select: function() {
-
-	},
-	redraww: function(){
+	_renderButton: function(){
 		if(this.selected){
 			this.selectedText = this.selected[this.attrForText];
 			this.$.currentButton.style.fontWeight = "bold";
-			this.$.currentButton.style.color = "#2196F3";
+			this.$.currentButton.style.color = this.selectedColor;
 		} else {
 			this.selectedText = this.defaultText;
 			this.$.currentButton.style.fontWeight = "normal";
-			this.$.currentButton.style.color = "#212121";
+			this.$.currentButton.style.color = this.defaultColor;
 		}
 	},
-	onSelectedInternalChange: function(e){
-		this.selected = this.$.dropdownSelector.selected > 0 ? this.items[this.$.dropdownSelector.selected - 1] : null;
+	select: function(id) {
+		var found = this.$.dropdownSelector.items.filter(function (o) {
+			return o.dataId == id;
+		}.bind(this));
+		if(found.length == 1) {
+			this.$.dropdownSelector.select(this.$.dropdownSelector.indexOf(found[0]));
+		} else if(found.length > 1) {
+			console.error("More than one item found with a matching id!");
+		} else {
+			this.$.dropdownSelector.select(0);
+		}
 	},
-	_trans: function(data){
-		return data + 1;
-	},
-	ready: function(){
-		this.selectedText = this.defaultText;
+	ready: function() {
+
 	}
 });
 </script>
