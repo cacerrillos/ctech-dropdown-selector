@@ -14,6 +14,8 @@
 	<ctech-dropdown-selector id="demo" default-text="Swag" raised selected="{{selected}}"></ctech-dropdown-selector><br>
 	Selected: <div>[[selected.id]]</div> <div>[[selected.name]]</div>
 	<paper-button on-click="_doExternalSelect">External Select</paper-button>
+	<paper-button on-click="_doExternalSelectNone">Select None</paper-button>
+	<paper-button on-click="_doItemChange">Change Items</paper-button>
 </template>
 
 <script>
@@ -26,6 +28,16 @@
 		},
 		_doExternalSelect: function() {
 			this.$.demo.select('idTwo');
+		},
+		_doExternalSelectNone: function() {
+			this.$.demo.select();
+		},
+		_doItemChange: function() {
+			var data = [
+				{ id: 'abcd', name: 'UNO BUNO' },
+				{ id: 'edfg', name: 'Lovers On The Sun' },
+			];
+			this.$.demo.items = data;
 		},
 		ready: function() {
 			var data = [
