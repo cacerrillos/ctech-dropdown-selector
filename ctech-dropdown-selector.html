@@ -13,7 +13,7 @@
 		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
 		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="_onSelectedInternalChange">
 			<paper-item id="defaultItem">[[defaultText]]</paper-item>
-			<template is="dom-repeat" items="[[_computeItems(items)]]" as="row">
+			<template is="dom-repeat" items="[[_computeObjectToArray(items)]]" as="row">
 				<paper-item data-id="[[_getItemAttribute(row, attrForSelected)]]">[[_getItemAttribute(row, attrForText)]]</paper-item>
 			</template>
 		</paper-menu>
@@ -62,7 +62,7 @@ Polymer({
 		this.select();
 		this._renderButton();
 	},
-	_computeItems: function(e) {
+	_computeObjectToArray: function(e) {
 		var arr = [];
 		for(var key in e) {
 			if(e.hasOwnProperty(key)) {
@@ -75,8 +75,30 @@ Polymer({
 	_getItemAttribute: function(item, attribute) {
 		return item[attribute];
 	},
+	_findTemplateItemWithId: function(id) {
+		var found = this.$.dropdownSelector.items.filter(function (o) { return o.dataId == id; }.bind(this));
+		if(found.length == 1) {
+			return found[0];
+		} else if(found.length > 1) {
+			console.error("More than one item found with a matching id! " + id);
+			console.error(this.$.dropdownSelector.items);
+		} else {
+			return null;
+		}
+	},
+	_findItemWithId: function(id) {
+		var found = this._computeObjectToArray(this.items).filter(function (o) { return o[this.attrForSelected] == id; }.bind(this));
+		if(found.length == 1) {
+			return found[0];
+		} else if(found.length > 1) {
+			console.error("More than one item found with a matching id! " + id);
+			console.error(this.$.dropdownSelector.items);
+		} else {
+			return null;
+		}
+	},
 	_onSelectedInternalChange: function(e){
-		this.selected = this.$.dropdownSelector.selected > 0 ? this.items[this.$.dropdownSelector.selected - 1] : null;
+		this.selected = this._findItemWithId(e.detail.item.dataId);
 	},
 	_onSelectedChange: function(e) {
 		this._renderButton();
@@ -93,13 +115,9 @@ Polymer({
 		}
 	},
 	select: function(id) {
-		var found = this.$.dropdownSelector.items.filter(function (o) {
-			return o.dataId == id;
-		}.bind(this));
-		if(found.length == 1) {
-			this.$.dropdownSelector.select(this.$.dropdownSelector.indexOf(found[0]));
-		} else if(found.length > 1) {
-			console.error("More than one item found with a matching id!");
+		var item = this._findTemplateItemWithId(id);
+		if(item) {
+			this.$.dropdownSelector.select(this.$.dropdownSelector.indexOf(item));
 		} else {
 			this.$.dropdownSelector.select(0);
 		}

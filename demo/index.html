@@ -16,6 +16,7 @@
 	<paper-button on-click="_doExternalSelect">External Select</paper-button>
 	<paper-button on-click="_doExternalSelectNone">Select None</paper-button>
 	<paper-button on-click="_doItemChange">Change Items</paper-button>
+	<paper-button on-click="_doHouseData">house Data</paper-button>
 </template>
 
 <script>
@@ -39,7 +40,13 @@
 			];
 			this.$.demo.items = data;
 		},
+		_doHouseData: function() {
+			var data = { 3: { version: 0, id: 3, name: "East" }, 1: { version: 0, id: 1, name: "North" }, 6: { version: 0, id: 6, name: "Other" }, 5: { version: 0, id: 5, name: "South" }, 4: { version: 0, id: 4, name: "West" } };
+			this.$.demo.items = data;
+		},
 		ready: function() {
+			this._doHouseData();
+			return;
 			var data = [
 				{ id: 'idOne', name: 'nameOfIdOne' },
 				{ id: 'idTwo', name: 'nameOfId2' },
