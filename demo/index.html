@@ -5,6 +5,19 @@
 	<link rel="import" href="../ctech-dropdown-selector.html">
 </head>
 <body>
-	<ctech-dropdown-selector></ctech-dropdown-selector>
+	<ctech-dropdown-selector id="demo" default-text="Swag" raised></ctech-dropdown-selector>
+	<paper-button on-click="_doExternalSelect">External Select</paper-button>
+	<script type="text/javascript">
+		var d = document.querySelector("#demo");
+		var data = [
+			{ id: 'idOne', name: 'nameOfIdOne' },
+			{ id: 'idTwo', name: 'nameOfId2' },
+		];
+		function _doExternalSelect() {
+			
+		}
+		d.objects = data;
+		console.log(d);
+	</script>
 </body>
 </html>
