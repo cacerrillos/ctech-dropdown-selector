@@ -13,7 +13,7 @@
 		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
 		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="_onSelectedInternalChange">
 			<paper-item id="defaultItem">[[defaultText]]</paper-item>
-			<template is="dom-repeat" items="[[items]]" as="row">
+			<template is="dom-repeat" items="[[_computeItems(items)]]" as="row">
 				<paper-item data-id="[[_getItemAttribute(row, attrForSelected)]]">[[_getItemAttribute(row, attrForText)]]</paper-item>
 			</template>
 		</paper-menu>
@@ -61,6 +61,16 @@ Polymer({
 	_onItemsChanged: function(e) {
 		this.select();
 		this._renderButton();
+	},
+	_computeItems: function(e) {
+		var arr = [];
+		for(var key in e) {
+			if(e.hasOwnProperty(key)) {
+				var o = e[key];
+				arr.push(o);
+			}
+		}
+		return arr;
 	},
 	_getItemAttribute: function(item, attribute) {
 		return item[attribute];
