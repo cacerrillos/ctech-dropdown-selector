@@ -5,19 +5,35 @@
 	<link rel="import" href="../ctech-dropdown-selector.html">
 </head>
 <body>
-	<ctech-dropdown-selector id="demo" default-text="Swag" raised></ctech-dropdown-selector>
-	<paper-button on-click="_doExternalSelect">External Select</paper-button>
-	<script type="text/javascript">
-		var d = document.querySelector("#demo");
-		var data = [
-			{ id: 'idOne', name: 'nameOfIdOne' },
-			{ id: 'idTwo', name: 'nameOfId2' },
-		];
-		function _doExternalSelect() {
-			
-		}
-		d.objects = data;
-		console.log(d);
-	</script>
+	<ctech-dropdown-selector-demo></ctech-dropdown-selector-demo>
 </body>
 </html>
+<dom-module id="ctech-dropdown-selector-demo">
+
+<template>
+	<ctech-dropdown-selector id="demo" default-text="Swag" raised selected="{{selected}}"></ctech-dropdown-selector><br>
+	Selected: <div>[[selected.id]]</div> <div>[[selected.name]]</div>
+	<paper-button on-click="_doExternalSelect">External Select</paper-button>
+</template>
+
+<script>
+	Polymer({
+		is: 'ctech-dropdown-selector-demo',
+		properties: {
+			selected: {
+				type: Object
+			}
+		},
+		_doExternalSelect: function() {
+			this.$.demo.select('idTwo');
+		},
+		ready: function() {
+			var data = [
+				{ id: 'idOne', name: 'nameOfIdOne' },
+				{ id: 'idTwo', name: 'nameOfId2' },
+			];
+			this.$.demo.items = data;
+		}
+	});
+</script>
+</dom-module>
