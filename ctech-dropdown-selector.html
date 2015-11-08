@@ -16,7 +16,7 @@
 		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
 		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="onSelectedInternalChange">
 			<paper-item id="defaultItem">[[defaultText]]</paper-item>
-			<template is="dom-repeat" items="[[objects]]" as="row">
+			<template is="dom-repeat" items="[[items]]" as="row">
 				<paper-item data-id="[[_itemGetAttribute(row, attrForSelected)]]">[[_itemGetAttribute(row, attrForText)]]</paper-item>
 			</template>
 		</paper-menu>
@@ -40,13 +40,13 @@ Polymer({
 			type: String,
 			value: 'name'
 		},
-		objects: {
+		items: {
 			type: Object,
 			observer: "onobjchange"
 		},
 		selected: {
 			type: Object,
-			observer: "onSelectedChange",
+			observer: "_onSelectedChange",
 			readonly: true,
 			notify: true
 		},
@@ -65,7 +65,7 @@ Polymer({
 	_itemGetAttribute: function(item, attribute) {
 		return item[attribute];
 	},
-	onSelectedChange: function(e) {
+	_onSelectedChange: function(e) {
 		this.redraww();
 		return;
 		if(this.objects){
@@ -96,7 +96,7 @@ Polymer({
 		}
 	},
 	onSelectedInternalChange: function(e){
-		this.selected = this.$.dropdownSelector.selected > 0 ? this.objects[this.$.dropdownSelector.selected - 1] : null;
+		this.selected = this.$.dropdownSelector.selected > 0 ? this.items[this.$.dropdownSelector.selected - 1] : null;
 	},
 	_trans: function(data){
 		return data + 1;
