@@ -5,16 +5,17 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../ctech-selector-behavior/ctech-selector-behavior.html">
 <style is="custom-style">
 
 </style>
 <template>
 	<paper-menu-button>
 		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
-		<paper-menu id="dropdownSelector" class="dropdown-content" on-iron-select="_onSelectedInternalChange">
+		<paper-menu class="dropdown-content ctech-selector">
 			<paper-item id="defaultItem">[[defaultText]]</paper-item>
-			<template is="dom-repeat" items="[[_computeObjectToArray(items)]]" as="row">
-				<paper-item data-id="[[_getItemAttribute(row, attrForSelected)]]">[[_getItemAttribute(row, attrForText)]]</paper-item>
+			<template is="dom-repeat" items="[[itemsAsArray]]" as="row">
+				<paper-item class="ctech-selector-item">[[_itemText(row)]]</paper-item>
 			</template>
 		</paper-menu>
 	</paper-menu-button>
@@ -24,31 +25,6 @@ Polymer({
 	is: "ctech-dropdown-selector",
 	properties: {
 		raised: Boolean,
-		attrForSelected: {
-			type: String,
-			value: 'id'
-		},
-		attrForText: {
-			type: String,
-			value: 'name'
-		},
-		items: {
-			type: Object,
-			observer: "_onItemsChanged"
-		},
-		selected: {
-			type: Object,
-			observer: "_onSelectedChange",
-			readonly: true,
-			notify: true
-		},
-		defaultText: {
-			type: String,
-			value: "_____"
-		},
-		selectedText: {
-			type: String
-		},
 		selectedColor: {
 			type: String,
 			value: "#2196F3"
@@ -58,69 +34,20 @@ Polymer({
 			value: "#212121"
 		}
 	},
-	_onItemsChanged: function(e) {
-		this.select();
-		this._renderButton();
-	},
-	_computeObjectToArray: function(e) {
-		var arr = [];
-		for(var key in e) {
-			if(e.hasOwnProperty(key)) {
-				var o = e[key];
-				arr.push(o);
-			}
-		}
-		return arr;
-	},
-	_getItemAttribute: function(item, attribute) {
-		return item[attribute];
-	},
-	_findTemplateItemWithId: function(id) {
-		var found = this.$.dropdownSelector.items.filter(function (o) { return o.dataId == id; }.bind(this));
-		if(found.length == 1) {
-			return found[0];
-		} else if(found.length > 1) {
-			console.error("More than one item found with a matching id! " + id);
-			console.error(this.$.dropdownSelector.items);
-		} else {
-			return null;
-		}
-	},
-	_findItemWithId: function(id) {
-		var found = this._computeObjectToArray(this.items).filter(function (o) { return o[this.attrForSelected] == id; }.bind(this));
-		if(found.length == 1) {
-			return found[0];
-		} else if(found.length > 1) {
-			console.error("More than one item found with a matching id! " + id);
-			console.error(this.$.dropdownSelector.items);
-		} else {
-			return null;
-		}
-	},
-	_onSelectedInternalChange: function(e){
-		this.selected = this._findItemWithId(e.detail.item.dataId);
-	},
-	_onSelectedChange: function(e) {
-		this._renderButton();
-		this.fire('ctech-select', { item: e });
+	behaviors: [
+		CTechSelectorBehavior
+	],
+	listeners: {
+		'ctech-select': '_renderButton',
+		'ctech-items-changed': '_renderButton'
 	},
 	_renderButton: function(){
 		if(this.selected){
-			this.selectedText = this.selected[this.attrForText];
 			this.$.currentButton.style.fontWeight = "bold";
 			this.$.currentButton.style.color = this.selectedColor;
 		} else {
-			this.selectedText = this.defaultText;
 			this.$.currentButton.style.fontWeight = "normal";
 			this.$.currentButton.style.color = this.defaultColor;
-		}
-	},
-	select: function(id) {
-		var item = this._findTemplateItemWithId(id);
-		if(item) {
-			this.$.dropdownSelector.select(this.$.dropdownSelector.indexOf(item));
-		} else {
-			this.$.dropdownSelector.select(0);
 		}
 	},
 	ready: function() {
