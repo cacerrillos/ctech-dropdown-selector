@@ -2,29 +2,26 @@
 <dom-module id="ctech-dropdown-selector">
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-menu-button/paper-menu-button.html">
-<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../ctech-selector-behavior/ctech-selector-behavior.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <style is="custom-style">
 
 </style>
 <template>
-	<paper-menu-button>
-		<paper-button class="dropdown-trigger" id="currentButton" raised="[[raised]]"><div>[[selectedText]]</div></paper-button>
+	<paper-dropdown-menu label="[[defaultText]]">
 		<paper-menu class="dropdown-content ctech-selector">
-			<paper-item id="defaultItem">[[defaultText]]</paper-item>
 			<template is="dom-repeat" items="[[itemsAsArray]]" as="row">
 				<paper-item class="ctech-selector-item">[[_itemText(row)]]</paper-item>
 			</template>
 		</paper-menu>
-	</paper-menu-button>
+	</paper-dropdown-menu>
 </template>
 <script>
 Polymer({
 	is: "ctech-dropdown-selector",
 	properties: {
-		raised: Boolean,
 		selectedColor: {
 			type: String,
 			value: "#2196F3"
@@ -37,21 +34,8 @@ Polymer({
 	behaviors: [
 		CTechSelectorBehavior
 	],
-	listeners: {
-		'ctech-select': '_renderButton',
-		'ctech-items-changed': '_renderButton'
-	},
-	_renderButton: function(){
-		if(this.selected){
-			this.$.currentButton.style.fontWeight = "bold";
-			this.$.currentButton.style.color = this.selectedColor;
-		} else {
-			this.$.currentButton.style.fontWeight = "normal";
-			this.$.currentButton.style.color = this.defaultColor;
-		}
-	},
 	ready: function() {
-		this.defaultToFirst = true;
+		this.defaultToFirst = false;
 	}
 });
 </script>

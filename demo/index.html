@@ -11,12 +11,12 @@
 <dom-module id="ctech-dropdown-selector-demo">
 
 <template>
-	<ctech-dropdown-selector id="demo" default-text="Swag" raised selected="{{selected}}"></ctech-dropdown-selector><br>
+	<ctech-dropdown-selector id="demo" default-text="Swag" selected="{{selected}}"></ctech-dropdown-selector><br>
 	Selected: <div>[[selected.id]]</div> <div>[[selected.name]]</div>
-	<paper-button on-click="_doExternalSelect">External Select</paper-button>
-	<paper-button on-click="_doExternalSelectNone">Select None</paper-button>
-	<paper-button on-click="_doItemChange">Change Items</paper-button>
-	<paper-button on-click="_doHouseData">house Data</paper-button>
+	<button on-click="_doExternalSelect">External Select</button>
+	<button on-click="_doExternalSelectNone">Select None</button>
+	<button on-click="_doItemChange">Change Items</button>
+	<button on-click="_doHouseData">house Data</button>
 </template>
 
 <script>
