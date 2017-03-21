@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "polymer": "~1",
-    "ctech-selector-behavior": "~1",
+    "ctech-selector-behavior": "https://github.com/cacerrillos/ctech-selector-behavior.git#~1",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#~1",
     "paper-menu-button": "PolymerElements/paper-menu-button#~1",
     "paper-menu": "PolymerElements/paper-menu#~1",
